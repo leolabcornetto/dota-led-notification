@@ -1,0 +1,27 @@
+{
+  "name": "dota-led-notification",
+  "version": "1.0.0",
+  "description": "This is a project for Dota 2 notification on Blink 1 USB RGB LED notification light.",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leolabcornetto/dota-led-notification.git"
+  },
+  "author": "Chris",
+  "contributors": [
+    "John Joshua Ferrer <johnjoshuaferrer@disroot.org>"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/leolabcornetto/dota-led-notification/issues"
+  },
+  "homepage": "https://github.com/leolabcornetto/dota-led-notification#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "node-blink1": "^0.4.0"
+  }
+}
