@@ -14,7 +14,6 @@
     "John Joshua Ferrer <johnjoshuaferrer@disroot.org>"
   ],
   "license": "MIT",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/leolabcornetto/dota-led-notification/issues"
   },

@@ -1,14 +1,17 @@
 /**
  * Polls a function for a set amount of time.
  * @param {*} fn function to run
+ * @param {*} fnCondition condition to run
  * @param {*} ms poll delay in milliseconds
+ * @param {*} cb callback
  */
-export async function poll(fn, ms) {
+async function poll(fn, fnCondition, ms, cb) {
   await fn();
-  while (true) {
+  while (fnCondition()) {
     await wait(ms);
     await fn();
   }
+  await cb();
 }
 
 /**
@@ -20,3 +23,5 @@ function wait(ms = 1000) {
     setTimeout(resolve, ms);
   });
 }
+
+module.exports = poll;

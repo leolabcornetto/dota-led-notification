@@ -1,19 +1,21 @@
-import dotenv from 'dotenv';
-import axios from 'axios';
-import Blink1 from 'node-blink1';
-
-import { poll } from './polling.js';
+const dotenv = require('dotenv');
+const axios = require('axios');
+const Blink1 = require('node-blink1');
+const poll = require('./polling');
 
 // Load environment config
 dotenv.config();
 
 const { STEAM_WEBAPI_KEY, STEAM_ID, POLL_MS } = process.env;
-const DOTA_2_ID = 570;
+const DOTA_2_ID = '570';
+
+// Running flag
+let shouldRun = true;
 
 /**
  * Checks the current status of the player.
  */
-const checkStatus = () => {
+const checkStatus = async () => {
   // Build query parameters
   const params = new URLSearchParams({
     key: STEAM_WEBAPI_KEY,
@@ -22,17 +24,16 @@ const checkStatus = () => {
 
   const paramsStr = params.toString();
 
-  axios
-    .get(
+  try {
+    const response = await axios.get(
       `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?${paramsStr}`
-    )
-    .then((response) => {
-      const { data } = response;
-      decideColor(data.response.players[0]);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+    );
+    const { data } = response;
+    shouldRun = decideColor(data.response.players[0]);
+  } catch (error) {
+    console.error(error);
+    shouldRun = false;
+  }
 };
 
 /**
@@ -50,10 +51,21 @@ const decideColor = (player) => {
     }
   } catch (error) {
     console.error(`Cannot find a connected Blink1.`);
+    return false;
   }
+
+  return true;
 };
 
 // Poll every 2 seconds
-poll(checkStatus, Number(POLL_MS));
+poll(
+  checkStatus,
+  () => shouldRun,
+  Number(POLL_MS),
+  async () => {
+    console.log('Polling has ended.');
+    process.exit(0);
+  }
+);
 
 console.log('Polling has started.');
