@@ -10,9 +10,10 @@ dotenv.config();
 const { STEAM_WEBAPI_KEY, STEAM_ID, POLL_MS } = process.env;
 const DOTA_2_ID = 570;
 
+/**
+ * Checks the current status of the player.
+ */
 const checkStatus = () => {
-  console.log('Checking status...');
-
   // Build query parameters
   const params = new URLSearchParams({
     key: STEAM_WEBAPI_KEY,
@@ -34,17 +35,18 @@ const checkStatus = () => {
     });
 };
 
+/**
+ * Decides the color for the blink1 LED based on player data.
+ * @param {*} player player data from Steam WEB API
+ */
 const decideColor = (player) => {
   try {
     const blink = new Blink1();
     // Game is Dota 2
     if (player.gameid === DOTA_2_ID) {
-      blink.setRGB(255, 0, 0, () => {
-        console.log('LED set to RED');
-      });
+      blink.setRGB(255, 0, 0, () => {});
     } else {
-      blink.setRGB(0, 255, 0);
-      console.log('LED set to GREEN');
+      blink.setRGB(0, 255, 0, () => {});
     }
   } catch (error) {
     console.error(`Cannot find a connected Blink1.`);
@@ -53,3 +55,5 @@ const decideColor = (player) => {
 
 // Poll every 2 seconds
 poll(checkStatus, Number(POLL_MS));
+
+console.log('Polling has started.');
